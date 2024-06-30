@@ -9,7 +9,7 @@ This is an issue tracking system that i developed using springboot and React and
 
 == Admins can create, Read, and Delete Issues <br />
 
-TO BE IMPLEMENTED
+TO BE IMPLEMENTED <br />
 -- user(Issue Handler) where the user can view their assigned issues.<br />
 --- update Issues from admin Side.<br />
 
