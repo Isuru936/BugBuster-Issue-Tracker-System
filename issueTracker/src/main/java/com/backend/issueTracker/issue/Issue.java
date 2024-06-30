@@ -1,4 +1,4 @@
-package com.backend.issueTracker.model;
+package com.backend.issueTracker.issue;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

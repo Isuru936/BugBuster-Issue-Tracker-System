@@ -1,6 +1,5 @@
-package com.backend.issueTracker.service;
+package com.backend.issueTracker.issue;
 
-import com.backend.issueTracker.controller.IssueController;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,15 @@ public class IssueService {
         this.issueRepository = issueRepository;
     }
 
-    public List<IssueController.Issue> getIssue() {
+    public List<Issue> getIssue() {
         return issueRepository.findAll(); // this easily fetches Issues from the database
     }
 
-    public IssueController.Issue getIssueById(Long id) {
+    public Issue getIssueById(Long id) {
         return issueRepository.findById(id).orElse(null);
     }
 
-    public void addNewIssue(IssueController.Issue issue) {
+    public void addNewIssue(Issue issue) {
         issueRepository.save(issue);
         System.out.println(issue);
     }
@@ -41,7 +40,7 @@ public class IssueService {
 
     @Transactional
     public void updateIssue(Long issueId, String technician, LocalDateTime issueAssigned) {
-        IssueController.Issue issue = issueRepository.findById(issueId)
+        Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new IllegalStateException(
                         "issue with id " + issueId + "does not exist"));
 

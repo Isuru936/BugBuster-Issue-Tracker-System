@@ -11,71 +11,61 @@ const technicians = [
 ];
 
 function Admin() {
-  const [issues, setIssues] = useState([]);
   const currentUser = useSelector((state) => state.user.currentUser);
   const [selectedTechnician, setSelectedTechnician] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fetchedIssues, setfetchedIssues] = useState([]);
   const [issueData, setIssueData] = useState(null);
 
   const toggleModal = (data) => {
     setIssueData(data);
     setIsModalOpen(!isModalOpen);
   };
+
   const selectTechnician = (e) => {
     console.log(e.target.value);
     setSelectedTechnician(e.target.value);
   };
 
-  useEffect(() => {
-    const dummyIssues = [
-      {
-        id: 1,
-        status: 0,
-        subject: "Issue 1",
-        description: "Description for issue 1 lorem for",
-        imageURL: "/logo.jpeg",
-        email: "assignee1@example.com",
-        issueCreated: "2023-06-29T12:00:00",
-        issueAssigned: null,
-        technician: "",
-      },
-      {
-        id: 2,
-        status: 1,
-        subject: "Issue 2",
-        description: "Description for issue 2",
-        imageURL: "https://example.com/image2.jpg",
-        email: "assignee2@example.com",
-        issueCreated: "2023-06-28T10:00:00",
-        issueAssigned: "2023-06-28T10:00:00",
-        technician: "Technician 1",
-      },
-      {
-        id: 3,
-        status: 2,
-        subject: "Issue 3",
-        description: "Description for issue 3",
-        imageURL: "",
-        email: "assignee3@example.com",
-        issueCreated: "2023-06-27T09:30:00",
-        issueAssigned: "2023-06-28T11:30:00",
-        technician: "Technician 3",
-      },
-      {
-        id: 4,
-        status: 2,
-        subject: "Issue 3",
-        description: "Description for issue 3",
-        imageURL: "",
-        email: "assignee3@example.com",
-        issueCreated: "2023-06-27T09:30:00",
-        issueAssigned: "2023-06-28T11:30:00",
-        technician: "Technician 3",
-      },
-    ];
+  const fetchIssues = async () => {
+    try {
+      const response = await fetch("/api/v1/auth/issue", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      setfetchedIssues(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    setIssues(dummyIssues);
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/auth/issue/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      alert("Issue Deleted Successfully");
+      toggleModal();
+      fetchIssues();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(currentUser.token);
+
+    fetchIssues();
   }, []);
 
   return (
@@ -84,7 +74,7 @@ function Admin() {
       <Tools />
       <div className="mx-auto p-5 lg:p-5 lg:py-6">
         <div className="flex flex-col space-y-2">
-          {issues.map((data, index) => (
+          {fetchedIssues.map((data, index) => (
             <div
               key={index}
               className="p-4 bg-gray-100 text-gray-800 rounded-lg shadow-lg "
@@ -244,7 +234,7 @@ function Admin() {
                   Assign Technician
                 </button>
                 <button
-                  onClick={toggleModal}
+                  onClick={() => handleDelete(issueData.id)}
                   className="py-2.5 px-5 ms-3 text-sm font-medium text-white bg-red-700 focus:outline-none rounded-lg hover:bg-red-800 focus:z-10 focus:ring-4 focus:ring-red-800 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                 >
                   Delete Issue

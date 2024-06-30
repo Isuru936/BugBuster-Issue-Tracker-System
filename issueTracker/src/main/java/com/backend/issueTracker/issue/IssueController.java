@@ -1,6 +1,5 @@
-package com.backend.issueTracker.controller;
+package com.backend.issueTracker.issue;
 
-import com.backend.issueTracker.model.Issue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/auth/")
+@RequestMapping("api/v1/auth/issue")
 public class IssueController {
     private final IssueService issueService;
 
@@ -41,6 +40,13 @@ public class IssueController {
 
     @PostMapping
     public void registerNewIssue(@RequestBody Issue issue) {
+        issue.setIssueCreated(LocalDateTime.now());
+        if(issue.getTechnician().isEmpty()){
+            issue.setStatus(0);
+        } else {
+            issue.setIssueAssigned(LocalDateTime.now());
+            issue.setStatus(1);
+        }
         issueService.addNewIssue(issue);
     }
 
@@ -56,5 +62,12 @@ public class IssueController {
             @RequestParam(required = false) LocalDateTime issueAssigned){
         System.out.println("Controller " + technician);
         issueService.updateIssue(issueId, technician, issueAssigned);
+    }
+
+    @PutMapping(path = "/assign/{issueId}")
+    public void updateTechnician(
+            @PathVariable("issueId") Long issueID,
+            @RequestParam(required = true) String technician) {
+        issueService.updateIssue(issueID, technician, LocalDateTime.now());
     }
 }
