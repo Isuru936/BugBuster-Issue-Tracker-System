@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useNavigate } from "react-router-dom";
 
 function Tools() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -36,13 +38,15 @@ function Tools() {
           <Icon icon="uil:user-md" className="w-6 h-6" />
           <span className="sr-only">Profile</span>
         </button>
-        <button
-          type="button"
-          className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
-        >
-          <Icon icon="icon-park-solid:add-mode" className="w-6 h-6" />
-          <span className="sr-only">Add Issue</span>
-        </button>
+        <a href="/add-issue">
+          <button
+            type="button"
+            className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
+          >
+            <Icon icon="icon-park-solid:add-mode" className="w-6 h-6" />
+            <span className="sr-only">Add Issue</span>
+          </button>
+        </a>
       </div>
       <button
         type="button"

@@ -3,11 +3,17 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import NavBar from "./components/NavBar";
 import Tools from "./components/Tools";
 import { useSelector } from "react-redux";
-import IssuePopUp from "./components/IssuePopUp";
+
+const technicians = [
+  { name: "Technician 1" },
+  { name: "Technician 2" },
+  { name: "Technician 3" },
+];
 
 function Admin() {
   const [issues, setIssues] = useState([]);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [selectedTechnician, setSelectedTechnician] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [issueData, setIssueData] = useState(null);
@@ -16,6 +22,10 @@ function Admin() {
     setIssueData(data);
     setIsModalOpen(!isModalOpen);
   };
+  const selectTechnician = (e) => {
+    console.log(e.target.value);
+    setSelectedTechnician(e.target.value);
+  };
 
   useEffect(() => {
     const dummyIssues = [
@@ -23,7 +33,7 @@ function Admin() {
         id: 1,
         status: 0,
         subject: "Issue 1",
-        description: "Description for issue 1",
+        description: "Description for issue 1 lorem for",
         imageURL: "/logo.jpeg",
         email: "assignee1@example.com",
         issueCreated: "2023-06-29T12:00:00",
@@ -52,13 +62,24 @@ function Admin() {
         issueAssigned: "2023-06-28T11:30:00",
         technician: "Technician 3",
       },
+      {
+        id: 4,
+        status: 2,
+        subject: "Issue 3",
+        description: "Description for issue 3",
+        imageURL: "",
+        email: "assignee3@example.com",
+        issueCreated: "2023-06-27T09:30:00",
+        issueAssigned: "2023-06-28T11:30:00",
+        technician: "Technician 3",
+      },
     ];
 
     setIssues(dummyIssues);
   }, []);
 
   return (
-    <div className="w-screen bg-gray-800 h-screen">
+    <div className="w-screen bg-gray-800 h-full">
       <NavBar email={currentUser.email} />
       <Tools />
       <div className="mx-auto p-5 lg:p-5 lg:py-6">
@@ -145,15 +166,97 @@ function Admin() {
         </div>
       </div>
       {isModalOpen && (
-        <div className="w-screen h-screen absolute top-0 left-0 bg-[#11205288] flex flex-col justify-center align-middle items-center">
-          <div className="w-64 h-64 flex justify-between p-5 bg-blue-500">
-            
-            Run time
-            <Icon
-              icon="mingcute:close-fill"
-              className="text-xl"
-              onClick={toggleModal}
-            />
+        <div className="fixed overflow-scroll top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-gray-900 bg-opacity-50">
+          <div className="relative  p-4 w-full max-w-2xl max-h-full">
+            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  #{issueData.id} {issueData.subject}
+                </h3>
+                <button
+                  type="button"
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={toggleModal}
+                >
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
+              </div>
+              <div className="p-4 md:p-5 space-y-4">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  <span className="font-bold"> Assignee:</span>{" "}
+                  {issueData.email} <br />
+                  <span className="font-bold"> Assigned Handler:</span>{" "}
+                  {issueData.technician ? issueData.technician : "Not Assigned"}{" "}
+                  <br />
+                  <select
+                    name="technicians"
+                    id="technicians"
+                    className="pr-3 pl-3 bg-red-50 mt-3 rounded-lg w-fit h-10 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-800 dark:focus:ring-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    onChange={selectTechnician}
+                  >
+                    {technicians.map((tech, index) => (
+                      <option
+                        key={index}
+                        value={tech.name}
+                        className="p-3 bg-red-50 rounded-lg w-fit h-10 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-800 dark:focus:ring-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                      >
+                        {tech.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button className="ml-3 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                    <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                      Assign technician
+                    </span>
+                  </button>
+                </p>
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  {issueData.description}
+                  {issueData.imageURL && (
+                    <img
+                      src={issueData.imageURL}
+                      alt="attachment"
+                      className="w-full h-60 object-cover rounded-lg"
+                    />
+                  )}
+                </p>
+              </div>
+              <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button
+                  onClick={toggleModal}
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Assign Technician
+                </button>
+                <button
+                  onClick={toggleModal}
+                  className="py-2.5 px-5 ms-3 text-sm font-medium text-white bg-red-700 focus:outline-none rounded-lg hover:bg-red-800 focus:z-10 focus:ring-4 focus:ring-red-800 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                >
+                  Delete Issue
+                </button>
+                <button
+                  onClick={toggleModal}
+                  className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -7,7 +7,7 @@ import Client from "./pages/Client";
 import ClientRoute from "./pages/components/ClientRoute";
 import AdminRoute from "./pages/components/AdminRoute";
 import Tools from "./pages/components/Tools";
-import IssuePopUp from "./pages/components/IssuePopUp";
+import AddIssue from "./pages/Issue Management/AddIssue";
 
 function App() {
   return (
@@ -17,9 +17,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<SignUp />} />
-          <Route path="/tools" element={<IssuePopUp />} />
+          <Route path="/tools" element={<Tools />} />
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<Admin />} />
+            <Route path="/add-issue" element={<AddIssue />} />
           </Route>
           <Route element={<ClientRoute />}>
             <Route path="/client" element={<Client />} />
