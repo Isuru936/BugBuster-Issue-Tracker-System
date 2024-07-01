@@ -1,0 +1,20 @@
+# Use an official OpenJDK runtime as a parent image
+FROM openjdk:11-jdk-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Maven dependency list script into the container
+COPY ./target/mvn-dependency-list.log /app/target/
+
+# Copy the rest of your application code
+COPY . /app
+
+# Run Maven to build your application
+RUN mvn -DskipTests clean package
+
+# If you need to install npm dependencies, you can add those commands here
+# RUN npm install
+
+# Specify the command to run your application
+CMD ["java", "-jar", "target/your-application.jar"]
