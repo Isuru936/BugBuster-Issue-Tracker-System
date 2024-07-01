@@ -1,26 +1,42 @@
 import { useState, useEffect } from "react";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 import NavBar from "./components/NavBar";
 import Tools from "./components/Tools";
 import { useSelector } from "react-redux";
 import "./admin.css";
-const technicians = [
-  { name: "Technician 1" },
-  { name: "Technician 2" },
-  { name: "Technician 3" },
-];
+import { motion } from "framer-motion";
 
 function Admin() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [selectedTechnician, setSelectedTechnician] = useState("");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchedIssues, setfetchedIssues] = useState([]);
   const [issueData, setIssueData] = useState(null);
+  const [technicians, setTechnicians] = useState([]);
 
   const toggleModal = (data) => {
     setIssueData(data);
     setIsModalOpen(!isModalOpen);
+  };
+
+  const fetchTechnicians = async () => {
+    try {
+      const res = await fetch("/api/v1/auth/users/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTechnicians(data);
+        console.log(data.email);
+      } else {
+        console.log("Failed to fetch technicians");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const selectTechnician = (e) => {
@@ -126,98 +142,111 @@ function Admin() {
     console.log(currentUser.token);
 
     fetchIssues();
+    fetchTechnicians();
   }, []);
 
   return (
     <div className="w-full bg-gray-800 h-screen">
       <NavBar email={currentUser.email} />
       <Tools />
-      <div className="mx-auto  h-screen pl-5 pr-5 pt-5 lg:p-5 lg:py-0">
-        <div className="flex bg-gray-800 w-full h-screen flex-col mt-5 ">
+      <div className="mx-auto h-screen pl-5 pr-5 pt-5 lg:p-5 lg:py-0">
+        <div className="flex bg-gray-800 w-full h-screen flex-col mt-5">
           {fetchedIssues.map((data, index) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.8 },
+                visible: { opacity: 1, scale: 1 },
+              }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+              }}
               key={index}
-              className="p-4 bg-gray-100 text-gray-800 mb-4 rounded-lg shadow-lg "
+              className="p-4 bg-gray-100 text-gray-800 mb-4 rounded-lg shadow-lg"
               onClick={() => {
                 toggleModal(data);
               }}
             >
-              <div className="flex flex-row border-b pb-2 mb-2 ">
-                <div className="flex-shrink-0 w-fit text-center">
-                  <div className="font-light">#{data.id}</div>
-                  {data.status === 0 && (
-                    <div className="bg-red-600 text-white font-bold rounded px-2 py-1 mt-1">
-                      New
-                    </div>
-                  )}
-                  {data.status === 1 && (
-                    <div className="bg-yellow-600 text-white font-bold rounded px-2 py-1 mt-1">
-                      Assigned
-                    </div>
-                  )}
-                  {data.status === 2 && (
-                    <div className="bg-green-600 text-white font-bold rounded px-2 py-1 mt-1">
-                      Completed
-                    </div>
-                  )}
-                </div>
-                <div className="flex-grow pl-4">
-                  <div className="text-xl font-semibold">{data.subject}</div>
-                  <div className="text-sm font-light">{data.description}</div>
-                </div>
-                <div className="ml-auto">
-                  {data.imageURL && (
-                    <Icon
-                      icon="carbon:document-attachment"
-                      width="24"
-                      height="24"
-                      color="blue"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col lg:flex-row justify-between text-sm font-light pt-2">
-                <div className="pr-0 lg:pr-4 border-r border-gray-300">
-                  <p>Assignee</p>
-                  <p className="font-semibold">{data.email}</p>
-                </div>
-                <div className="px-0 lg:px-4 border-r border-gray-300">
-                  <p>Created Date</p>
-                  <p className="font-semibold">
-                    {data.issueCreated.split("T")[0]}{" "}
-                    {data.issueCreated.split("T")[1].split(".")[0]}
-                  </p>
-                </div>
-                <div className="px-0 lg:px-4 border-r border-gray-300">
-                  <p>Assigned to</p>
-                  <p className="font-semibold">
-                    {data.issueAssigned !== null
-                      ? data.technician
-                      : "Not Assigned"}
-                  </p>
-                </div>
-                <div className="pl-0 lg:pl-4">
-                  <p>Assigned date</p>
-                  <p className="font-semibold">
-                    {data.issueAssigned !== null ? (
-                      <>
-                        {data.issueAssigned.split("T")[0]}{" "}
-                        {data.issueAssigned.split("T")[1].split(".")[0]}
-                      </>
-                    ) : (
-                      "-"
+              <div>
+                <div className="flex flex-row border-b pb-2 mb-2">
+                  <div className="flex-shrink-0 w-fit text-center">
+                    <div className="font-light">#{data.id}</div>
+                    {data.status === 0 && (
+                      <div className="bg-red-600 text-white font-bold rounded px-2 py-1 mt-1">
+                        New
+                      </div>
                     )}
-                  </p>
+                    {data.status === 1 && (
+                      <div className="bg-yellow-600 text-white font-bold rounded px-2 py-1 mt-1">
+                        Assigned
+                      </div>
+                    )}
+                    {data.status === 2 && (
+                      <div className="bg-green-600 text-white font-bold rounded px-2 py-1 mt-1">
+                        Completed
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-grow pl-4">
+                    <div className="text-xl font-semibold">{data.subject}</div>
+                    <div className="text-sm font-light">{data.description}</div>
+                  </div>
+                  <div className="ml-auto">
+                    {data.imageURL && (
+                      <Icon
+                        icon="carbon:document-attachment"
+                        width="24"
+                        height="24"
+                        color="blue"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row justify-between text-sm font-light pt-2">
+                  <div className="pr-0 lg:pr-4 border-r border-gray-300">
+                    <p>Assignee</p>
+                    <p className="font-semibold">{data.email}</p>
+                  </div>
+                  <div className="px-0 lg:px-4 border-r border-gray-300">
+                    <p>Created Date</p>
+                    <p className="font-semibold">
+                      {data.issueCreated.split("T")[0]}{" "}
+                      {data.issueCreated.split("T")[1].split(".")[0]}
+                    </p>
+                  </div>
+                  <div className="px-0 lg:px-4 border-r border-gray-300">
+                    <p>Assigned to</p>
+                    <p className="font-semibold">
+                      {data.issueAssigned !== null
+                        ? data.technician
+                        : "Not Assigned"}
+                    </p>
+                  </div>
+                  <div className="pl-0 lg:pl-4">
+                    <p>Assigned date</p>
+                    <p className="font-semibold">
+                      {data.issueAssigned !== null ? (
+                        <>
+                          {data.issueAssigned.split("T")[0]}{" "}
+                          {data.issueAssigned.split("T")[1].split(".")[0]}
+                        </>
+                      ) : (
+                        "-"
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
       {isModalOpen && (
         <div className="fixed overflow-scroll top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-gray-900 bg-opacity-50">
-          <div className="relative  p-4 w-full max-w-2xl max-h-full">
+          <div className="relative p-4 w-full max-w-2xl max-h-full">
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -266,7 +295,7 @@ function Admin() {
                         value={tech.name}
                         className="p-3 bg-red-50 rounded-lg w-fit h-10 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-800 dark:focus:ring-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                       >
-                        {tech.name}
+                        {tech.email}
                       </option>
                     ))}
                   </select>

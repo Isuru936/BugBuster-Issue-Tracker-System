@@ -10,6 +10,8 @@ import Tools from "./pages/components/Tools";
 import AddIssue from "./pages/Issue Management/AddIssue";
 import ViewTechnicians from "./pages/technician Managemet/ViewTechnicians";
 import NotFoundPage from "./pages/components/NotFoundPage";
+import AnimatedSVG from "./pages/components/AnimatedSVG";
+import Banner from "./pages/Banner";
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path="/client" element={<Client />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/banner" element={<Banner />} />
         </Routes>
       </BrowserRouter>
     </div>

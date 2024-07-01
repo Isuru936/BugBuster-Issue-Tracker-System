@@ -67,4 +67,10 @@ public class IssueController {
         System.out.println(id);
       issueService.markAsComplete(id);
     }
+
+    @GetMapping("/email/{email}")
+    public List<Issue> fetchIssuesByTechEmail(@PathVariable String email){
+        System.out.println(email);
+        return issueService.fetchIssuesByEmail(email);
+    }
 }
