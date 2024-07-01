@@ -5,6 +5,8 @@ import Tools from "./components/Tools";
 import { useSelector } from "react-redux";
 import "./admin.css";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Admin() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -78,7 +80,7 @@ function Admin() {
           body: JSON.stringify({ technician: selectedTechnician }),
         }
       );
-      alert("Issue Assigned Successfully");
+      toast.success("Issue Assigned Successfully");
       fetchIssues();
     } catch (error) {
       console.log(error);
@@ -99,11 +101,11 @@ function Admin() {
       );
 
       if (response.status === 403) {
-        alert("Forbidden: You are not authorized to perform this action");
+        toast.error("Forbidden: You are not authorized to perform this action");
         return;
       }
       if (response.status === 200) {
-        alert("Issue Marked as Completed");
+        toast.success("Issue Marked as Completed");
         fetchIssues();
       }
     } catch (error) {
@@ -123,8 +125,8 @@ function Admin() {
         },
       });
       if (response.status === 403) {
-        alert(
-          "Forbidden: You are not authorized to perform this action. Try logging in again."
+        toast.error(
+          "Forbidden: You are not authorized to perform this action. Try logging in again"
         );
         return;
       }
@@ -345,6 +347,7 @@ function Admin() {
               </div>
             </div>
           </div>
+          <ToastContainer />
         </div>
       )}
     </div>

@@ -3,6 +3,8 @@ import NavBar from "./components/NavBar";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { logout } from "../redux/user/userSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Client() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -31,7 +33,7 @@ function Client() {
         setIssues(data);
       }
       if (response.status === 403) {
-        alert(
+        toast.error(
           "You are not authorized to view this page. Try logging in again."
         );
       }
@@ -52,11 +54,11 @@ function Client() {
       });
 
       if (response.status === 403) {
-        alert("Forbidden: You are not authorized to perform this action");
+        toast.error("Forbidden: You are not authorized to perform this action");
         return;
       }
       if (response.status === 200) {
-        alert("Issue Marked as Completed");
+        toast.success("Issue Marked as Completed");
         fetchIssuesByEmail(currentUser.email);
       }
     } catch (error) {
@@ -234,6 +236,7 @@ function Client() {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 }

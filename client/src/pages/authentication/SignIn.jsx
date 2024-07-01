@@ -71,12 +71,14 @@ function SignIn() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <h1 className="mb-4 absolute top-0 right-0 p-5 text-3xl font-extrabold text-gray-900 w-screen h-fit md:text-5xl lg:text-6xl">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-blue-600 from-sky-500">
-          Bug Buster
-        </span>
-        <hr className="w-full bg-gray-500 mb-4 border border-b-2 bg-clip-text bg-gradient-to-r to-blue-600 from-sky-500" />
-      </h1>
+      <a href="/">
+        <h1 className="mb-4 absolute top-0 right-0 p-5 text-3xl font-extrabold text-gray-900 w-screen h-fit md:text-5xl lg:text-6xl">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-blue-600 from-sky-500">
+            Bug Buster
+          </span>
+          <hr className="w-full bg-gray-500 mb-4 border border-b-2 bg-clip-text bg-gradient-to-r to-blue-600 from-sky-500" />
+        </h1>
+      </a>
       <div className="w-full h-fit block lg:flex flex-row gap-5 border border-black max-w-lg p-4 bg-white rounded-lg shadow sm:p-6 md:p-8 dark:bg-slate-50 ">
         <form className="space-y-6" onSubmit={handleLogin}>
           <h5 className="mb-4 text-xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">

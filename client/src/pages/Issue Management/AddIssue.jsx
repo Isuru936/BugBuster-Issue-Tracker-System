@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import { toast } from "react-toastify";
 
 function AddIssue() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -48,12 +49,14 @@ function AddIssue() {
         console.log("Failed to fetch technicians");
       }
     } catch (error) {
+      toast.error("Failed to fetch technicians");
       console.log(error);
     }
   };
 
   const handleFileUpload = async (e) => {
     const selectedFile = e.target.files[0];
+    toast.info("Uploading Image...");
     if (selectedFile) {
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(selectedFile.name);
@@ -62,10 +65,11 @@ function AddIssue() {
         const snapshot = await fileRef.put(selectedFile);
         const url = await snapshot.ref.getDownloadURL();
         setIssue({ ...issue, imageURL: url });
+        toast.success("Image uploaded successfully");
         console.log("File uploaded successfully");
       } catch (error) {
         console.error("Error uploading file:", error);
-        alert("Failed to upload file. Please try again.");
+        toast.error("Failed to upload image");
       } finally {
         setLoading(false);
       }
@@ -87,10 +91,10 @@ function AddIssue() {
         body: JSON.stringify(issue),
       });
       if (response.ok) {
-        alert("Issue Created Successfully");
+        toast.success("Issue Created Successfully");
         navigate("/admin");
       } else {
-        alert("Failed to Create Issue");
+        toast.success("Failed to Create Issue");
       }
     } catch (error) {
       console.log(error);
