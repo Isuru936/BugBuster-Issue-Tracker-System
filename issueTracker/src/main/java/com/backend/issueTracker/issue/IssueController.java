@@ -55,19 +55,16 @@ public class IssueController {
         issueService.deleteIssue(issueId);
     }
 
-    @PutMapping(path = "{issueId}")
-    public void updateIssue(
-            @PathVariable("issueId") Long issueId,
-            @RequestParam(required = true) String technician,
-            @RequestParam(required = false) LocalDateTime issueAssigned){
-        System.out.println("Controller " + technician);
-        issueService.updateIssue(issueId, technician, issueAssigned);
-    }
-
     @PutMapping(path = "/assign/{issueId}")
     public void updateTechnician(
             @PathVariable("issueId") Long issueID,
             @RequestParam(required = true) String technician) {
         issueService.updateIssue(issueID, technician, LocalDateTime.now());
+    }
+
+    @PutMapping(path = "/completed/{id}")
+    public void markAsDone(@PathVariable("id") Long id){
+        System.out.println(id);
+      issueService.markAsComplete(id);
     }
 }

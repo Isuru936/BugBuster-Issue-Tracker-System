@@ -4,6 +4,7 @@ import {
   loginStart,
   loginSuccess,
   loginFailure,
+  logout,
 } from "../../redux/user/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -25,6 +26,7 @@ function SignIn() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       dispatch(loginStart());
 
@@ -56,7 +58,7 @@ function SignIn() {
         dispatch(loginFailure(data.message));
         return;
       }
-
+      dispatch(logout());
       dispatch(loginSuccess(data));
       navigate("/client");
       console.log(data);

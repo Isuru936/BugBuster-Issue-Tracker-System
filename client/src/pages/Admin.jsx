@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import NavBar from "./components/NavBar";
 import Tools from "./components/Tools";
 import { useSelector } from "react-redux";
-
+import "./admin.css";
 const technicians = [
   { name: "Technician 1" },
   { name: "Technician 2" },
@@ -69,6 +69,34 @@ function Admin() {
     }
   };
 
+  const markAsCompleted = async () => {
+    try {
+      const response = await fetch(
+        `/api/v1/auth/issue/completed/${issueData.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 403) {
+        alert("Forbidden: You are not authorized to perform this action");
+        return;
+      }
+      if (response.status === 200) {
+        alert("Issue Marked as Completed");
+        fetchIssues();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    toggleModal();
+  };
+
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`/api/v1/auth/issue/${id}`, {
@@ -78,9 +106,17 @@ function Admin() {
           "Content-Type": "application/json",
         },
       });
-      alert("Issue Deleted Successfully");
-      toggleModal();
-      fetchIssues();
+      if (response.status === 403) {
+        alert(
+          "Forbidden: You are not authorized to perform this action. Try logging in again."
+        );
+        return;
+      }
+      if (response.status === 200) {
+        alert("Issue Deleted Successfully");
+        toggleModal();
+        fetchIssues();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -93,11 +129,11 @@ function Admin() {
   }, []);
 
   return (
-    <div className="w-screen bg-gray-800 h-full">
+    <div className="w-screen bg-gray-800 h-screen">
       <NavBar email={currentUser.email} />
       <Tools />
-      <div className="mx-auto p-5 lg:p-5 lg:py-6">
-        <div className="flex flex-col space-y-2">
+      <div className="mx-auto  h-screen pl-5 pr-5 pt-5 lg:p-5 lg:py-0">
+        <div className="flex bg-gray-800 w-full  h-screen flex-col ">
           {fetchedIssues.map((data, index) => (
             <div
               key={index}
@@ -150,7 +186,7 @@ function Admin() {
                   <p>Created Date</p>
                   <p className="font-semibold">
                     {data.issueCreated.split("T")[0]}{" "}
-                    {data.issueCreated.split("T")[1]}
+                    {data.issueCreated.split("T")[1].split(".")[0]}
                   </p>
                 </div>
                 <div className="px-0 lg:px-4 border-r border-gray-300">
@@ -167,7 +203,7 @@ function Admin() {
                     {data.issueAssigned !== null ? (
                       <>
                         {data.issueAssigned.split("T")[0]}{" "}
-                        {data.issueAssigned.split("T")[1]}
+                        {data.issueAssigned.split("T")[1].split(".")[0]}
                       </>
                     ) : (
                       "-"
@@ -233,7 +269,12 @@ function Admin() {
                       </option>
                     ))}
                   </select>
-                  <button className="ml-3 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                  <button
+                    onClick={() => {
+                      handleAssign();
+                    }}
+                    className="ml-3 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
+                  >
                     <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                       Assign technician
                     </span>
@@ -253,11 +294,11 @@ function Admin() {
               <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <button
                   onClick={() => {
-                    handleAssign();
+                    markAsCompleted();
                   }}
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  Assign Technician
+                  Mark as Completed
                 </button>
                 <button
                   onClick={() => handleDelete(issueData.id)}

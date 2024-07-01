@@ -8,6 +8,7 @@ import ClientRoute from "./pages/components/ClientRoute";
 import AdminRoute from "./pages/components/AdminRoute";
 import Tools from "./pages/components/Tools";
 import AddIssue from "./pages/Issue Management/AddIssue";
+import ViewTechnicians from "./pages/technician Managemet/ViewTechnicians";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<Admin />} />
             <Route path="/add-issue" element={<AddIssue />} />
+            <Route path="/view-techs" element={<ViewTechnicians />} />
           </Route>
           <Route element={<ClientRoute />}>
             <Route path="/client" element={<Client />} />

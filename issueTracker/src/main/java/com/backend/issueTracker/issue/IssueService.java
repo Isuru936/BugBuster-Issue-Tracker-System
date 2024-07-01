@@ -3,6 +3,7 @@ package com.backend.issueTracker.issue;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +63,15 @@ public class IssueService {
         }
 
         issue.setStatus(1);
+    }
+
+    @Transactional
+    public void markAsComplete(Long issueId){
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new IllegalStateException((
+                        "Issue not found"
+                )));
+        issue.setStatus(2);
     }
 
 }

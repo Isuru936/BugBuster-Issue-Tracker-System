@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/user/userSlice";
 
 function Tools() {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -19,25 +22,33 @@ function Tools() {
       >
         <button
           type="button"
+          onClick={() => {
+            dispatch(logout());
+            navigate("/login");
+          }}
           className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
         >
           <Icon icon="hugeicons:logout-04" className="w-6 h-6" />
-          <span className="sr-only">Sign Out</span>
+          <span className="sr-only">Log Out</span>
         </button>
-        <button
-          type="button"
-          className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
-        >
-          <Icon icon="arcticons:eu-login-mobile" className="w-6 h-6" />
-          <span className="sr-only">LogIn</span>
-        </button>
-        <button
-          type="button"
-          className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
-        >
-          <Icon icon="uil:user-md" className="w-6 h-6" />
-          <span className="sr-only">Profile</span>
-        </button>
+        <a href="/login">
+          <button
+            type="button"
+            className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
+          >
+            <Icon icon="arcticons:eu-login-mobile" className="w-6 h-6" />
+            <span className="sr-only">LogIn</span>
+          </button>
+        </a>
+        <a href="/view-techs">
+          <button
+            type="button"
+            className="flex justify-center items-center w-14 h-14 text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 focus:outline-none"
+          >
+            <Icon icon="uil:user-md" className="w-6 h-6" />
+            <span className="sr-only">View Handlers</span>
+          </button>
+        </a>
         <a href="/add-issue">
           <button
             type="button"
