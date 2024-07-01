@@ -129,15 +129,15 @@ function Admin() {
   }, []);
 
   return (
-    <div className="w-screen bg-gray-800 h-screen">
+    <div className="w-full bg-gray-800 h-screen">
       <NavBar email={currentUser.email} />
       <Tools />
       <div className="mx-auto  h-screen pl-5 pr-5 pt-5 lg:p-5 lg:py-0">
-        <div className="flex bg-gray-800 w-full  h-screen flex-col ">
+        <div className="flex bg-gray-800 w-full h-screen flex-col mt-5 ">
           {fetchedIssues.map((data, index) => (
             <div
               key={index}
-              className="p-4 bg-gray-100 text-gray-800 rounded-lg shadow-lg "
+              className="p-4 bg-gray-100 text-gray-800 mb-4 rounded-lg shadow-lg "
               onClick={() => {
                 toggleModal(data);
               }}
@@ -259,6 +259,7 @@ function Admin() {
                     className="pr-3 pl-3 bg-red-50 mt-3 rounded-lg w-fit h-10 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-800 dark:focus:ring-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                     onChange={selectTechnician}
                   >
+                    <option value="">Select Technician</option>
                     {technicians.map((tech, index) => (
                       <option
                         key={index}

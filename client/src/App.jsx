@@ -9,6 +9,7 @@ import AdminRoute from "./pages/components/AdminRoute";
 import Tools from "./pages/components/Tools";
 import AddIssue from "./pages/Issue Management/AddIssue";
 import ViewTechnicians from "./pages/technician Managemet/ViewTechnicians";
+import NotFoundPage from "./pages/components/NotFoundPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route element={<ClientRoute />}>
             <Route path="/client" element={<Client />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </div>
