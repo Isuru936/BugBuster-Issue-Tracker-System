@@ -16,7 +16,7 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    const res = await fetch("/api/v1/auth/register", {
+    const res = await fetch("api/v1/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

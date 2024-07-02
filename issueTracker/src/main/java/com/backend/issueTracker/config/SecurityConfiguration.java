@@ -23,15 +23,13 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf()
-            .disable()
+                .csrf().disable()
+                .cors().and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -39,14 +37,13 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://deploy--bugbugster.netlify.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://ingenious-freedom-production-8978.up.railway.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -55,5 +52,4 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
